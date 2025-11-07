@@ -1,0 +1,40 @@
+@extends('layouts.app')
+@section('content')
+    <div class="container">
+
+        <div class="card bg-light mt-3">
+
+            <div class="card-header">
+
+                Import
+
+            </div>
+
+            <div class="card-body">
+
+                <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+
+                    @csrf
+
+                    <input type="file" name="file" class="form-control" required>
+
+                    <br>
+                    @if ($errors->has('file'))
+                    <div class="error">
+                        {{ $errors->first('file') }}
+                    </div>
+                    @endif
+                    <button class="btn btn-success">Import User Data</button>
+
+                    <a class="btn btn-warning" href="{{ route('export') }}">Export User Data</a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+@endsection

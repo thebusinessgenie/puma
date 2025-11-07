@@ -1,0 +1,97 @@
+@extends('layouts.app')
+@section('content')
+{{Config::set('subtitle','Role')}}
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">{{ $moduleName }} Details</h3>
+                <div class="card-tools">
+                    <div class="btn-group">
+                        {{-- @permission('create.users') --}}
+                        @if (auth()->user()->hasPermission('create.roles'))
+                            <a href="{{ route('role.create') }}" class="btn btn-primary btn-sm"><i
+                                    class="fa fa-plus"></i>
+                                New</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="datatable table table-bordered table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            @if(auth()->user()->hasPermission('edit.roles') || auth()->user()->hasPermission('activeinactive.roles') )
+                            <th>Action</th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+
+            </div>
+
+            <!-- /.card-footer-->
+
+        </div>
+        <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+@endsection
+
+
+
+
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+
+            var datatable = $('.datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                pageLength: 50,
+                ajax: {
+                    "url": "{{ route('role.getRoleData') }}",
+                    "dataType": "json",
+                    "type": "GET",
+                    "data": {
+                        is_active: function() {
+                            return $("#is_active").val();
+                        },
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'description'
+                    },
+                    @if(auth()->user()->hasPermission('edit.roles') || auth()->user()->hasPermission('activeinactive.roles') )
+                    {
+                        data: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    @endif
+                    ],
+            });
+        });
+    </script>
+@endsection
